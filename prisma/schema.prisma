@@ -1,0 +1,41 @@
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+enum Role {
+  CLIENT
+  OWNER
+  STAFF
+  ADMIN
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique, not null
+  password  String
+  name String?
+  phone String?
+  role Role @default(CLIENT)
+  createdAt DateTime, @default(now()) 
+  updatedAt - DateTime, @updateAt
+}
+
+model Businesses {
+  id    Int     @id @default(autoincrement())
+  user_owner User @relation(references:[id])
+  name String
+  
+}
+model Businesses {
+  id    Int     @id @default(autoincrement())
+}
+model Businesses {
+  id    Int     @id @default(autoincrement())
+}
