@@ -13,7 +13,7 @@ export default function AuthPage() {
     }
     const response = await fetch("/api/auth/login", {
       method: "POST",
-      body: JSON.stringify({ username: "example" }),
+      body: JSON.stringify({ email, password }),
       headers: {
         "Content-Type": "application/json",
       },

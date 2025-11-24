@@ -15,27 +15,46 @@ enum Role {
   STAFF
   ADMIN
 }
-
+enum Active {
+  0
+  1
+}
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique, not null
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
   password  String
-  name String?
-  phone String?
-  role Role @default(CLIENT)
-  createdAt DateTime, @default(now()) 
-  updatedAt - DateTime, @updateAt
+  name      String?
+  phone     String?
+  active    Active @default(1)
+  role      Role     @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // relations
+  businesses Business[]
+  acceptedAppointments Appointment[] @relation("AcceptedByUser")
 }
 
-model Businesses {
-  id    Int     @id @default(autoincrement())
-  user_owner User @relation(references:[id])
-  name String
-  
+model Business {
+  id          Int      @id @default(autoincrement())
+  name        String
+  userOwner   User     @relation(fields: [userOwnerId], references: [id])
+  userOwnerId Int
+  active      Active @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // relations
+  appointments Appointment[]
 }
-model Businesses {
-  id    Int     @id @default(autoincrement())
-}
-model Businesses {
-  id    Int     @id @default(autoincrement())
+
+model Appointment {
+  id           Int      @id @default(autoincrement())
+  acceptedBy   User?    @relation("AcceptedByUser", fields: [acceptedById], references: [id])
+  acceptedById Int?
+  business     Business @relation(fields: [businessId], references: [id])
+  businessId   Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  dateFrom     DateTime
+  dateTo       DateTime
+  status       String
 }

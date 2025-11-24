@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from 'bcrypt'
+
+const saltRounds:number = 10;
 
 export async function POST(req:NextRequest) {
     const body = await req.json()
     console.log(body)
-    return NextResponse.json({ user: { login:'login' }, token: "fake-token" });
+    bcrypt.hash(body.password, saltRounds, function (err,hashedPassword) {
+        console.log(err);
+        console.log(hashedPassword);
+        
+    })
 }
