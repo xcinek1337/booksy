@@ -6,23 +6,23 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { email, password } = body;
+  const { email, password,name,phone } = body;
 
   const user = await prisma.user.findUnique({
     where: { email },
   });
 
-  if (!user) {
+  if (user) {
     return NextResponse.json(
-      { message: "Brak użytkownika", userExist: false },
+      { message: "Taki uzytkowmnik istnieje ", userExist: true },
       { status: 200 }
     );
   }
 
-  const isPasswordCorrect = await bcrypt.compare(password, user.password);
-  if (!isPasswordCorrect) {
-    return NextResponse.json({ message: "Niepoprawne hasło" }, { status: 401 });
-  }
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  return NextResponse.json({ user });
+  const newUser = await prisma.user.create({data:{email:email,password:hashedPassword,name:name,phone:phone}
+  })  
+
+  return NextResponse.json({ newUser });
 }

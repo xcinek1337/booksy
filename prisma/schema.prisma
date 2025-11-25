@@ -15,17 +15,14 @@ enum Role {
   STAFF
   ADMIN
 }
-enum Active {
-  0
-  1
-}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   password  String
   name      String?
   phone     String?
-  active    Active @default(1)
+  active    Boolean @default(true)
   role      Role     @default(CLIENT)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -39,7 +36,7 @@ model Business {
   name        String
   userOwner   User     @relation(fields: [userOwnerId], references: [id])
   userOwnerId Int
-  active      Active @default(1)
+  active      Boolean @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   // relations
